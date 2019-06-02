@@ -4,6 +4,7 @@
 // Pin donde se conecta el bus 1-Wire
 const int pinDatosDQ = 2;
 const int pinRele = 8;
+int estadoRele = false;
 
 // Instancia a las clases OneWire y DallasTemperature
 OneWire oneWireObjeto(pinDatosDQ);
@@ -37,11 +38,12 @@ void loop() {
     
     /*Activar si la temperatura es mayor a 30 grados*/
     double temperatura = sensorDS18B20.getTempCByIndex(0);
-    if(temperatura>30) {
+    
+    if(!estadoRele && temperatura>30) {
       Serial.print("¡¡¡¡¡¡¡MAYOR A 30!!!!!!");
       digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
       digitalWrite(pinRele, HIGH);  //Accionar relé para encender ventilador
-    } else {
+    } else if(estadoRele && temperatura <= 20 ){
       digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
       digitalWrite(pinRele, LOW);
     }
